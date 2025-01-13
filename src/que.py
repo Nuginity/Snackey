@@ -1,11 +1,12 @@
 import yt_dlp
 import discord
 import asyncio
+import shutil
+import os
+from src.util import config
 
-# Variabel global untuk antrean musik
 music_queue = []
 
-# Fungsi untuk mendapatkan informasi video dari YouTube
 def get_video_info(url):
     """Mendapatkan informasi dari video dengan URL yang diberikan."""
     ydl_opts = {
@@ -23,6 +24,19 @@ def get_video_info(url):
         print(f"Error saat mendapatkan informasi video: {e}")
         return None, None
 
+def get_ffmpeg_path():
+    """Mencari lokasi ffmpeg secara otomatis di sistem."""
+    ffmpeg_path = shutil.which("ffmpeg")
+    if ffmpeg_path:
+        return ffmpeg_path
+    else:
+        if os.name == 'nt':
+            return config['FF-PATH'][0]
+        elif os.name == 'posix':
+            return config['FF-PATH'][1]
+        else:
+            raise EnvironmentError("ffmpeg tidak ditemukan dan sistem operasi tidak didukung")
+
 async def add_to_queue(ctx, url):
     """Menambahkan lagu ke antrean."""
     music_queue.append(url)
@@ -33,33 +47,29 @@ async def play_next(ctx, bot):
         url = music_queue.pop(0)
         vc = ctx.voice_client
 
-        # Dapatkan informasi video
         title, url2 = get_video_info(url)
         if not url2:
             await ctx.send("Terjadi kesalahan saat memutar video.")
             return
 
-        # Fungsi untuk dijalankan setelah lagu selesai
         def after_playing(error):
             if error:
                 print(f"Error during playback: {error}")
             asyncio.run_coroutine_threadsafe(play_next(ctx, bot), bot.loop)
 
-        # Putar audio
-        ffmpeg_path = "C:/Alat/ffmpeg/bin/ffmpeg.exe"
+        ffmpeg_path = get_ffmpeg_path()
+
         audio_source = discord.FFmpegPCMAudio(url2, executable=ffmpeg_path)
         vc.play(discord.PCMVolumeTransformer(audio_source), after=after_playing)
         await ctx.send(f"Sekarang memutar: {title}")
 
 async def show_queue(ctx):
     """Menampilkan antrean lagu dengan judul dari antrian pertama."""
-    if music_queue:
-        # Buat pesan antrean
+    if music_queue:    
         pesan_antrean = "Daftar antrean:\n"
         
-        # Ambil informasi dari semua video dalam antrean
         for i, url in enumerate(music_queue):
-            title, _ = get_video_info(url)  # Ambil hanya judul
+            title, _ = get_video_info(url) 
             pesan_antrean += f"{str(i+1)}. **{title}**\n"
         
         await ctx.send(pesan_antrean)

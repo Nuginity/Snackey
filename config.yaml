@@ -1,6 +1,4 @@
-token:
-  DISCORD_TOKEN: ""
-
-commando: 
-  PREFIX: "."
-  idle: 10
+DISCORD_TOKEN: "" #input your discord token here
+FF-PATH: ["C:/ffmpeg/bin/ffmpeg.exe", "/usr/local/bin/ffmpeg"] ##chane ffmpeg location first for windows, second for linux
+PREFIX: "." ##change to your preffered
+idle: 10

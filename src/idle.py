@@ -1,7 +1,7 @@
 import asyncio
 from src.util import config
 
-async def check_idle_and_disconnect(ctx, bot, idle_time=config['commando']['idle']):
+async def check_idle_and_disconnect(ctx, bot, idle_time=config['idle']):
     voice_client = ctx.voice_client
     if not voice_client:  # Pastikan bot sudah terhubung ke voice channel
         return
