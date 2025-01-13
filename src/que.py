@@ -6,30 +6,37 @@ import os
 from src.util import config
 
 music_queue = []
+cookies_file = 'cookies.txt'
 
 def get_video_info(url):
-    """Mendapatkan informasi dari video dengan URL yang diberikan."""
-    cookies_file = "cookies.txt"  # Jalur file cookies
-
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'quiet': False,  # Aktifkan log untuk debugging
-        'noplaylist': True,
-    }
-
-    if os.path.exists(cookies_file):
-        ydl_opts['cookiefile'] = cookies_file
-        print(f"Menggunakan cookies dari: {cookies_file}")
-    else:
-        print("File cookies.txt tidak ditemukan, melanjutkan tanpa cookies.")
-
     try:
+        # Opsi untuk ydl (youtube-dl / yt-dlp)
+        ydl_opts = {
+            'cookiefile': cookies_file,  # Pastikan cookies_file sudah terdefinisi
+            'format': 'bestaudio/best',  # Pilih format audio terbaik
+            'noplaylist': True,           # Jangan download playlist
+            'quiet': True,                # Menyembunyikan output yang tidak diperlukan
+        }
+        
+        # Membuat instance yt_dlp dan mengambil informasi video
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
-            title = info.get('title', 'Unknown Title')
-            return title, info['url']
+            
+            # Mendapatkan informasi judul dan URL
+            title = info.get('title', None)
+            url2 = info.get('url', None)
+            
+            if title and url2:
+                return title, url2
+            else:
+                print("Error: Unable to extract title or URL from the video.")
+                return None, None
+                
+    except yt_dlp.DownloadError as e:
+        print(f"Error downloading video: {e}")
+        return None, None
     except Exception as e:
-        print(f"Error saat mendownload atau mencari video: {e}")
+        print(f"Unexpected error: {e}")
         return None, None
 
 def get_ffmpeg_path():

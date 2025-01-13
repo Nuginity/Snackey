@@ -1,4 +1,5 @@
 import yt_dlp
+import os
 
 def search_youtube(query):
     """
@@ -8,7 +9,10 @@ def search_youtube(query):
     Returns:
     - URL video paling atas (string) jika berhasil, None jika tidak ditemukan.
     """
+    cookies_file = "cookies.txt"
+
     ydl_opts = {
+        'cookiefile' : cookies_file,
         'format': 'bestaudio/best',
         'quiet': True,
         'default_search': 'ytsearch',  # Menentukan pencarian YouTube
