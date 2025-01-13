@@ -63,7 +63,7 @@ def get_ffmpeg_path():
             raise EnvironmentError("ffmpeg not found and your system isn't supported yet")
 
 async def add_to_queue(ctx, url):
-    """Menambahkan lagu ke antrean."""
+    """Menambahkan lagu kee antrean."""
     music_queue.append(url)
 
 async def play_next(ctx, bot):
