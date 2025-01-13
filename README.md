@@ -6,9 +6,9 @@ Music Bot built with Python for Discord. With Snackey, you can easily play music
 
 ## Commands
 
-- 🎵 play: Play music from YouTube or SoundCloud with a single command.
-- 🔀 Queue: Queue up songs and play your playlist without interruption.
-- ⏸️ Stop: Pause or resume the music playback.
+- 🎵 play: Play music from YouTube or with a single command.
+- 🔀 Queue: Queue up songs and play  without interruption.
+- ⏸️ Stop: Stop the music playback.
 - ⏭️ Skip: Skip the current song.
 - 🔊 Volume Control: Adjust the playback volume to your liking.
 
@@ -56,7 +56,8 @@ python bot.py
 
 Once the bot is running, you can use the following commands in your Discord server:
 
-- {prefix}play <url> - Play music from a YouTube or SoundCloud URL.
+- {prefix}play <search> - Play music from a YouTube search.
+- {prefix}play <url> - Play music from a Youtube and Soundcloud url directly
 - {prefix}skip - Skip the current song.
 - {prefix}antrian - Show the song queue.
 - {prefix}stop - Stop music playback and leave the voice channel.
