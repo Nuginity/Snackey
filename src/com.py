@@ -1,5 +1,6 @@
 from discord.ext import commands
 import discord
+import re
 from src.que import add_to_queue, play_next, show_queue, skip_current_song
 from src.idle import check_idle_and_disconnect
 from src.youtube_search import search_youtube
@@ -28,28 +29,35 @@ def setup(bot):
             await ctx.send("I'm not in a voice channel!")
 
     @bot.command()
-    async def play(ctx, *, query):
+    async def play(ctx, *, url):
         """
-        Mencari video di YouTube berdasarkan query dan memutarnya.
+        Memutar video di YouTube berdasarkan URL yang diberikan.
         """
         # Periksa apakah bot sudah di voice channel
         if not await check_voice_client(ctx):
             return
 
-        # Cari video berdasarkan query
-        video_url = search_youtube(query)
-        if not video_url:
-            await ctx.send("Can't find the video based on your search")
+        # Validasi URL yang diberikan
+        if not is_valid_youtube_url(url):
+            await ctx.send("Please provide a valid YouTube URL.")
             bot.loop.create_task(check_idle_and_disconnect(ctx, bot))
 
         # Tambahkan video ke antrean
-        await add_to_queue(ctx, video_url)
+        await add_to_queue(ctx, url)
 
         # Jika bot tidak sedang memutar musik, mulai memutar
         if not ctx.voice_client.is_playing():
             await play_next(ctx, bot)
 
         bot.loop.create_task(check_idle_and_disconnect(ctx, bot))
+
+    def is_valid_youtube_url(url):
+        """
+        Memeriksa apakah URL yang diberikan adalah URL YouTube yang valid.
+        """
+        # Regex sederhana untuk memvalidasi URL YouTube
+        youtube_url_pattern = r"^(https?://)?(www\.)?(youtube\.com|youtu\.be)/.+$"
+        return re.match(youtube_url_pattern, url) is not None
 
     @bot.command()
     async def antrian(ctx):
@@ -74,7 +82,7 @@ def setup(bot):
             if voice and voice.is_playing():  # Cek apakah bot terhubung dan sedang memutar sesuatu
                 new_volume = volume / 100  # Ubah volume ke range 0.0 - 1.0
                 voice.source.volume = new_volume  # Set volume pada source yang sedang diputar
-                await ctx.send(f"Adjusting volume to {volume}")
+                await ctx.send(f"adjusting volume to {volume}")
             else:
                 await ctx.send("Bot tidak sedang memutar suara atau tidak terhubung ke voice channel.")
         else:
