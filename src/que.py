@@ -4,9 +4,19 @@ import asyncio
 import shutil
 import os
 from src.util import config
+import time
+import typing
+import functools
+
 
 music_queue = []
 cookies_file = 'cookies.txt'
+
+async def run_blocking(blocking_func: typing.Callable, *args, **kwargs) -> typing.Any:
+    """Runs a blocking function in a non-blocking way."""
+    func = functools.partial(blocking_func, *args, **kwargs)  # Partial untuk mendukung kwargs
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, func)
 
 def get_video_info(url):
     try:
@@ -62,7 +72,13 @@ async def play_next(ctx, bot):
         url = music_queue.pop(0)
         vc = ctx.voice_client
 
-        title, url2 = get_video_info(url)
+        # Memanggil get_video_info secara non-blocking
+        try:
+            title, url2 = await run_blocking(get_video_info, url)
+        except Exception as e:
+            await ctx.send(f"Terjadi kesalahan saat memutar video: {e}")
+            return
+
         if not url2:
             await ctx.send("Terjadi kesalahan saat memutar video.")
             return
