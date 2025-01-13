@@ -1,4 +1,4 @@
-DISCORD_TOKEN: "MTMyNzk0NzY5NTUzMjUzOTk4Ng.GMY9eL.E1g09SQJj9u-EtEBECmrLwQAi9qc35nnMDBlSI" #input your discord token here
+DISCORD_TOKEN: "" #input your discord token here
 FF-PATH: ["C:/ffmpeg/bin/ffmpeg.exe", "/usr/local/bin/ffmpeg"] ##chane ffmpeg location first for windows, second for linux
 PREFIX: "." ##change to your preffered
-idle: 10
+idle: 5
