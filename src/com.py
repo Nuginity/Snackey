@@ -39,8 +39,8 @@ def setup(bot):
         # Cari video berdasarkan query
         video_url = search_youtube(query)
         if not video_url:
-            await ctx.send("Tidak dapat menemukan video berdasarkan pencarian Anda.")
-            return
+            await ctx.send("Can't find the video based on your search")
+            bot.loop.create_task(check_idle_and_disconnect(ctx, bot))
 
         # Tambahkan video ke antrean
         await add_to_queue(ctx, video_url)
@@ -74,8 +74,8 @@ def setup(bot):
             if voice and voice.is_playing():  # Cek apakah bot terhubung dan sedang memutar sesuatu
                 new_volume = volume / 100  # Ubah volume ke range 0.0 - 1.0
                 voice.source.volume = new_volume  # Set volume pada source yang sedang diputar
-                await ctx.send(f"Volume telah diatur ke {volume}%.")
+                await ctx.send(f"Adjusting volume to {volume}")
             else:
                 await ctx.send("Bot tidak sedang memutar suara atau tidak terhubung ke voice channel.")
         else:
-            await ctx.send("Volume harus berada di antara 0 dan 100.")
+            await ctx.send("Volume must be 1 - 100")

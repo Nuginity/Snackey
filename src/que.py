@@ -60,7 +60,7 @@ def get_ffmpeg_path():
         elif os.name == 'posix':
             return config['FF-PATH'][1]
         else:
-            raise EnvironmentError("ffmpeg tidak ditemukan dan sistem operasi tidak didukung")
+            raise EnvironmentError("ffmpeg not found and your system isn't supported yet")
 
 async def add_to_queue(ctx, url):
     """Menambahkan lagu ke antrean."""
@@ -76,11 +76,11 @@ async def play_next(ctx, bot):
         try:
             title, url2 = await run_blocking(get_video_info, url)
         except Exception as e:
-            await ctx.send(f"Terjadi kesalahan saat memutar video: {e}")
+            await ctx.send(f"There's a problem when playing the video: {e}")
             return
 
         if not url2:
-            await ctx.send("Terjadi kesalahan saat memutar video.")
+            await ctx.send("There's a problem when playing the video")
             return
 
         def after_playing(error):
@@ -95,9 +95,9 @@ async def play_next(ctx, bot):
         await ctx.send(f"Sekarang memutar: {title}")
 
 async def show_queue(ctx):
-    """Menampilkan antrean lagu dengan judul dari antrian pertama."""
+    """Showing queue."""
     if music_queue:    
-        pesan_antrean = "Daftar antrean:\n"
+        pesan_antrean = "Queue:\n"
         
         for i, url in enumerate(music_queue):
             title, _ = get_video_info(url) 
@@ -105,12 +105,12 @@ async def show_queue(ctx):
         
         await ctx.send(pesan_antrean)
     else:
-        await ctx.send("Antrean kosong!")
+        await ctx.send("No song requested yet")
 
 async def skip_current_song(ctx):
     """Melewati lagu yang sedang diputar."""
     if ctx.voice_client and ctx.voice_client.is_playing():
         ctx.voice_client.stop()
-        await ctx.send("Melewati lagu ini!")
+        await ctx.send("Skipping this song")
     else:
-        await ctx.send("Tidak ada lagu yang sedang diputar!")
+        await ctx.send("There's no song currently playing")
