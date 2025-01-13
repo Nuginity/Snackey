@@ -9,11 +9,19 @@ music_queue = []
 
 def get_video_info(url):
     """Mendapatkan informasi dari video dengan URL yang diberikan."""
+    cookies_file = "cookies.txt"  # Jalur file cookies
+
     ydl_opts = {
         'format': 'bestaudio/best',
-        'quiet': True,
+        'quiet': False,  # Aktifkan log untuk debugging
         'noplaylist': True,
     }
+
+    if os.path.exists(cookies_file):
+        ydl_opts['cookiefile'] = cookies_file
+        print(f"Menggunakan cookies dari: {cookies_file}")
+    else:
+        print("File cookies.txt tidak ditemukan, melanjutkan tanpa cookies.")
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -21,7 +29,7 @@ def get_video_info(url):
             title = info.get('title', 'Unknown Title')
             return title, info['url']
     except Exception as e:
-        print(f"Error saat mendapatkan informasi video: {e}")
+        print(f"Error saat mendownload atau mencari video: {e}")
         return None, None
 
 def get_ffmpeg_path():
