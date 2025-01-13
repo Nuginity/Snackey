@@ -80,7 +80,6 @@ async def play_next(ctx, bot):
             return
 
         if not url2:
-            await ctx.send("There's a problem when playing the video")
             return
 
         def after_playing(error):
