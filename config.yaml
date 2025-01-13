@@ -1,0 +1,6 @@
+token:
+  DISCORD_TOKEN: ""
+
+commando: 
+  PREFIX: "."
+  idle: 10
