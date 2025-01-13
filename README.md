@@ -62,3 +62,6 @@ Once the bot is running, you can use the following commands in your Discord serv
 - {prefix}stop - Stop music playback and leave the voice channel.
 - {prefix}Volume - Set the volume of bot <1-100>
 
+## Extra
+
+You can use youtube cookies to bypass sign in, just put cookies.txt in master folder
